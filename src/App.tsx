@@ -1,87 +1,49 @@
-import { Button, FormLabel, SemanticNames, Stack, Text, TextArea, TextField, TextFieldType, Typography } from '@channel.io/bezier-react'
-import React, { KeyboardEvent, ChangeEvent, FormEvent, useState } from 'react'
+import React, { useEffect } from 'react'
+import Form from './components/Form'
+import { Payload } from './types'
 import './App.css'
-import * as Styled from './App.styled'
+import { ToastPreset, useToast } from '@channel.io/bezier-react'
+import axios from 'axios'
 
 function App() {
-  const [sender, setSender] = useState('')
-  const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
+  const { addToast } = useToast()
 
-  const handleChange =
-  (dispatcher: React.Dispatch<React.SetStateAction<string>>) =>
-  (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    dispatcher(e.target.value)
-  }
-
-  const disableSubmit = !sender || !title || !content || (content.length > 1500)
-
-  const payload = {
-    title: `[${sender}] ${title}`,
-    content,
-  }
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement> ) => {
-    e.preventDefault()
-    if (disableSubmit) { return }
+  const handleSubmit = (payload: Payload) => {
     console.log(payload)
+
+    const promise = new Promise<void>((resolve, reject) => {
+      axios.post('', payload)
+        .then(() => {
+          resolve()
+        })
+        .catch(error => {
+          addToast('error', {
+            preset: ToastPreset.Error,
+            rightSide: true,
+          })
+          reject()
+      })
+    })
+    return promise
   }
 
-  const preventSubmitByEnter = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-    };
-  }
-
-  const countError = content.length > 1500
-
-  const countColor: SemanticNames = countError ? 'bgtxt-orange-dark' : 'txt-black-dark'
+  useEffect(function initialize() {
+    console.log('hi')
+    axios.get('/ping')
+      .catch(() => {
+        addToast('서버가 죽어있어요.', {
+          preset: ToastPreset.Error,
+          autoDismiss: false,
+          rightSide: true,
+          actionContent: '새로고침',
+        })
+      })
+  }, [addToast])
 
   return (
     <div className="App">
-      <h1>Dino에게 편지 쓰기</h1>
-      <form onSubmit={handleSubmit}>
-        <Styled.FormControl>
-          <FormLabel>작성자</FormLabel>
-          <TextField
-            type={TextFieldType.Text}
-            onChange={handleChange(setSender)}
-            onKeyDown={preventSubmitByEnter}
-            maxLength={10}
-            interpolation={Typography.Size16}
-            placeholder="이름"
-          />
-        </Styled.FormControl>
-        <Styled.FormControl>
-          <FormLabel>제목</FormLabel>
-          <TextField
-            type={TextFieldType.Text}
-            onChange={handleChange(setTitle)}
-            onKeyDown={preventSubmitByEnter}
-            maxLength={20}
-            interpolation={Typography.Size16}
-            placeholder="도협아 잘 지내니"
-          />
-        </Styled.FormControl>
-        <Styled.FormControl>
-          <FormLabel>내용</FormLabel>
-          <TextArea
-            value={content}
-            cols={30}
-            rows={10}
-            onChange={handleChange(setContent)}
-            hasError={countError}
-            placeholder="어쩌구 저쩌구"
-          />
-          <Stack direction='horizontal' justify='end'>
-            <Text marginTop={6} typo={Typography.Size14} color={countColor}>
-              {content.length}/1500
-            </Text>
-          </Stack>
-        </Styled.FormControl>
-        
-        <Button disabled={disableSubmit} type="submit" text="전송" />
-      </form>
+      <h1>Dino(한도협)에게 편지 쓰기</h1>
+      <Form onSubmit={handleSubmit} />
     </div>
   )
 }

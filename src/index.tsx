@@ -1,3 +1,4 @@
+import { ToastProvider } from '@channel.io/bezier-react'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
@@ -11,7 +12,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <ThemeProvider>
-      <App />
+      <ToastProvider>
+        <App />
+      </ToastProvider>
     </ThemeProvider>
   </React.StrictMode>
 )
