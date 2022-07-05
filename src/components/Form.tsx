@@ -4,15 +4,23 @@ import { Payload } from '../types'
 import * as Styled from './Form.styled'
 
 function Form({
+  canSend,
   onSubmit,
 }: {
+  canSend: boolean
   onSubmit: (payload: Payload) => Promise<void>
 }) {
   const [sender, setSender] = useState(window.localStorage.getItem('sender') ?? '')
   const [title, setTitle] = useState(window.localStorage.getItem('title') ?? '')
   const [content, setContent] = useState(window.localStorage.getItem('content') ?? '')
 
-  const disableSubmit = !sender || !title || !content || (content.length > 1500)
+  const disableSubmit = (
+    !canSend ||
+    !sender ||
+    !title ||
+    !content ||
+    (content.length > 1500)
+  )
 
   const handleChange =
   (dispatcher: React.Dispatch<React.SetStateAction<string>>) =>
@@ -29,6 +37,7 @@ function Form({
     if (disableSubmit) { return }
     onSubmit(payload)
       .then(() => setContent(''))
+      .catch(console.error)
   }
 
   const preventSubmitByEnter = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -42,7 +51,6 @@ function Form({
       window.localStorage.setItem('sender', sender)
       window.localStorage.setItem('title', title)
       window.localStorage.setItem('content', content)
-      console.log('save!!')
     }, 300)
 
     return () => {
