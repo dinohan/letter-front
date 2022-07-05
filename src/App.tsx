@@ -37,7 +37,7 @@ function App() {
   }
 
   useEffect(function initialize() {
-    axios.get(`${END_POINT}/ping`)
+    axios.get(`${END_POINT}/version`)
       .then(() => {
         setCanSend(true)
       })
