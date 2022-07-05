@@ -37,7 +37,6 @@ function App() {
   }
 
   useEffect(function initialize() {
-    console.log('hi')
     axios.get(`${END_POINT}/ping`)
       .then(() => {
         setCanSend(true)
