@@ -5,7 +5,7 @@ import './App.css'
 import { ToastOptions, ToastPreset, useToast } from '@channel.io/bezier-react'
 import axios from 'axios'
 
-const END_POINT = 'https://2rvz7tb962.execute-api.ap-northeast-2.amazonaws.com/live'
+const END_POINT = 'https://camp.api.exp.channel.io'
 
 const defaultErrorHandling: Pick<ToastOptions, 'actionContent' | 'onClick'> = {
   actionContent: '오류 보고하기',
@@ -29,7 +29,6 @@ function App() {
           addToast(error.message, {
             preset: ToastPreset.Error,
             rightSide: true,
-            ...defaultErrorHandling,
           })
           reject(error)
       })
