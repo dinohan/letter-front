@@ -23,6 +23,10 @@ function App() {
     const promise = new Promise<void>((resolve, reject) => {
       axios.post(`${END_POINT}/send`, payload)
         .then(() => {
+          addToast('전송 완료!', {
+            preset: ToastPreset.Success,
+            rightSide: true,
+          })
           resolve()
         })
         .catch(error => {

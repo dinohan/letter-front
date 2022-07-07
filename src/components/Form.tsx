@@ -1,4 +1,4 @@
-import { Button, FormLabel, SemanticNames, Stack, Text, TextArea, TextField, TextFieldType, Typography } from '@channel.io/bezier-react'
+import { FormLabel, SemanticNames, Stack, TextArea, TextField, TextFieldType, Typography } from '@channel.io/bezier-react'
 import React, { KeyboardEvent, ChangeEvent, FormEvent, useState, useEffect } from 'react'
 import { Payload } from '../types'
 import * as Styled from './Form.styled'
@@ -64,7 +64,9 @@ function Form({
   return (
     <form onSubmit={handleSubmit}>
       <Styled.FormControl>
+        <Styled.LabelWrapper>
         <FormLabel>작성자</FormLabel>
+        </Styled.LabelWrapper>
         <TextField
           type={TextFieldType.Text}
           value={sender}
@@ -76,7 +78,9 @@ function Form({
         />
       </Styled.FormControl>
       <Styled.FormControl>
-        <FormLabel>제목</FormLabel>
+        <Styled.LabelWrapper>
+          <FormLabel>제목</FormLabel>
+        </Styled.LabelWrapper>
         <TextField
           type={TextFieldType.Text}
           value={title}
@@ -88,7 +92,13 @@ function Form({
         />
       </Styled.FormControl>
       <Styled.FormControl>
-        <FormLabel>내용</FormLabel>
+        <Styled.LabelWrapper>
+          <FormLabel>내용</FormLabel>
+
+          <Styled.Count marginTop={6} typo={Typography.Size14} color={countColor}>
+            {content.length}/1500
+          </Styled.Count>
+        </Styled.LabelWrapper>
         <TextArea
           value={content}
           cols={30}
@@ -98,14 +108,13 @@ function Form({
           hasError={countError}
           placeholder="어쩌구 저쩌구"
         />
-        <Stack direction='horizontal' justify='end'>
-          <Text marginTop={6} typo={Typography.Size14} color={countColor}>
-            {content.length}/1500
-          </Text>
-        </Stack>
+
       </Styled.FormControl>
-      
-      <Button disabled={disableSubmit} type="submit" text="전송" />
+
+      <br />
+      <Stack direction='horizontal' justify='end'>
+        <Styled.Submit disabled={disableSubmit} type="submit" text="전송" />
+      </Stack>
     </form>
   )
 }
